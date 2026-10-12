@@ -92,9 +92,15 @@ jobs:
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair --add-path C:\cibw\vendor\bin -w {dest_dir} {wheel}
           CIBW_TEST_COMMAND: python -c "import dummy"
         run: |
+          set -o pipefail
           pip install cibuildwheel delvewheel
-          cibuildwheel --output-dir output
+          cibuildwheel --output-dir output 2>&1 | tee build.log
           rm -f output/*.whl
+      - name: Show the end of the build log
+        if: failure()
+        run: |
+          msg=$(tail -n 120 build.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          echo "::error title=build log tail::$msg"
       - name: Upload FFmpeg
         uses: actions/upload-artifact@v6
         with:

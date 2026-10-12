@@ -1,0 +1,11 @@
+--- libvpl-2.16.0.orig/libvpl/src/windows/mfx_dispatcher_defs.h	2026-10-12 10:34:03.313718300 +0900
++++ libvpl-2.16.0/libvpl/src/windows/mfx_dispatcher_defs.h	2026-10-12 10:34:05.024721700 +0900
+@@ -17,7 +17,7 @@
+ #define MAX_PLUGIN_PATH 4096
+ #define MAX_PLUGIN_NAME 4096
+ 
+-#if _MSC_VER < 1400
++#if defined(_MSC_VER) && _MSC_VER < 1400
+     #define wcscpy_s(to, to_size, from) \
+         (void)(to_size);                \
+         wcscpy(to, from)

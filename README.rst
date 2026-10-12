@@ -1,3 +1,16 @@
+LGPL-only fork
+==============
+
+This is a fork of `PyAV-Org/pyav-ffmpeg <https://github.com/PyAV-Org/pyav-ffmpeg>`_
+(tag ``8.1.1-2``) that builds FFmpeg **without x264 and x265**, so that the
+resulting binaries contain no GPL components. Changes from upstream:
+
+- ``--enable-libx264`` / ``--enable-libx265`` are removed and the two libraries are not built.
+- The ``configure`` patch that moved libx264/libx265 out of FFmpeg's GPL list is dropped.
+- Only Linux x86_64 (manylinux) and Windows x86_64 are built. Pushing a tag publishes a release.
+
+The upstream description follows.
+
 pyav-ffmpeg
 ===========
 

@@ -99,8 +99,15 @@ jobs:
       - name: Show the end of the build log
         if: failure()
         run: |
-          msg=$(tail -n 120 build.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
-          echo "::error title=build log tail::$msg"
+          # Annotations are readable without signing in, but each one is cut short,
+          # so emit the interesting lines in small pieces.
+          emit() { echo "::error title=$1::$(sed 's/%/%25/g' | cut -c1-300 | awk '{printf "%s%%0A", $0}')"; }
+          grep -n -i -E "error|fatal|undefined reference|cannot find|No such file|not found|\*\*\*" build.log | tail -n 24 > hits.txt || true
+          split -l 8 hits.txt hits_
+          for f in hits_*; do emit "error lines $f" < "$f"; done
+          tail -n 36 build.log > tail.txt
+          split -l 9 tail.txt tail_
+          for f in tail_*; do emit "log $f" < "$f"; done
       - name: Upload FFmpeg
         uses: actions/upload-artifact@v6
         with:
